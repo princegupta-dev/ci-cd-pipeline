@@ -1,0 +1,24 @@
+{
+  "name": "ci-cd-pipeline",
+  "version": "1.0.0",
+  "description": "This repo demonstrates a complete CI/CD workflow for a backend app built in NodeJS, using Jenkins to automate build, test, and Docker-based deployment to AWS EC2.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.1.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3"
+  }
+}
