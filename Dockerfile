@@ -10,6 +10,7 @@ RUN npm ci
 
 # Copy source code and build
 COPY . .
+
 RUN npm run build
 
 # Expose port and run app

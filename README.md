@@ -67,3 +67,79 @@ docker exec -it jenkins bash
 **Start Jenkins in the background, expose ports 8080 and 50000, save Jenkins data to a persistent volume, and name the container jenkins**
 
 ---
+
+It performs the following steps automatically on every build:
+
+1. ✅ Clones the GitHub repository
+2. 🛠 Builds a Docker image
+3. 🚀 Runs the Docker container
+4. 📜 Displays recent logs
+5. 📦 Shows running container details
+
+## 📂 Project Structure
+
+├── Dockerfile # Builds a Node.js image
+├── Jenkinsfile # Jenkins pipeline definition (shared below)
+├── app.js # Sample Node.js server
+└── package.json # Project metadata and dependencies
+
+Paste this pipeline inside the Jenkins UI:
+
+```python
+
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "ci-cd-pipeline"
+        TAG = "latest"
+        CONTAINER_NAME = "ci-cd-container"
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/example/example.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME:$TAG .'
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    sh """
+                        docker stop $CONTAINER_NAME || true
+                        docker rm $CONTAINER_NAME || true
+                        docker run -d --name $CONTAINER_NAME -p 3000:3000 $IMAGE_NAME:$TAG
+                    """
+                }
+            }
+        }
+
+        stage('Check Logs') {
+            steps {
+                sh 'docker logs --tail 20 $CONTAINER_NAME'
+            }
+        }
+
+        stage('Show Running Containers') {
+            steps {
+                sh 'docker ps | grep $CONTAINER_NAME'
+            }
+        }
+    }
+}
+```
+
+2. Setup Jenkins Job
+
+- Go to Jenkins Dashboard → New Item
+- Enter name → Select Pipeline
+- Scroll to Pipeline Script section
+- Paste the pipeline { ... } script above
+- Save and build 🚀
